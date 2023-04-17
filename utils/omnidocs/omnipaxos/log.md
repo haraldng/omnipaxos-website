@@ -1,8 +1,3 @@
----
-title: "Reading and Writing"
-weight: 18
-toc: false
----
 # Reading and Writing
 We now show how to read and write the replicated log. The replicated log is *append-only*. To append an entry we call the following:
 

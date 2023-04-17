@@ -30,7 +30,7 @@ images: []
 `;
   fs.writeFileSync(`${basePath}/_index.md`, indexContent);
   generateFileStructure(jsonData, basePath);
-  deleteDirectory(OmniPaxosDocBasePath);
+  // deleteDirectory(OmniPaxosDocBasePath);
 }
 
 function generateFileStructure(fileStructure, basePath) {

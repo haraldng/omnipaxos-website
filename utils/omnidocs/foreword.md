@@ -1,8 +1,3 @@
----
-title: "Foreword"
-weight: 2
-toc: false
----
 # Foreword
 OmniPaxos is an in-development replicated log library implemented in Rust. OmniPaxos aims to hide the complexities of consensus to provide users a replicated log that is as simple to use as a local log. 
 

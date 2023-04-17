@@ -1,8 +1,3 @@
----
-title: "Project Info"
-weight: 8
-toc: false
----
 # Project Info
 
 While OmniPaxos is primarily being developed at the [KTH Royal Institute of Technology](https://www.kth.se/en) and [RISE Research Institutes of Sweden](https://www.ri.se/en) in Stockholm, Sweden, we do wish to thank all [contributors](https://github.com/haraldng/omnipaxos/graphs/contributors).
