@@ -1,0 +1,48 @@
+name: Update Docs
+
+on:
+  repository_dispatch:
+    types:
+      - doc_sync
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Pull docs of OmniPaxos
+        run: |
+          ls
+          cd content/en
+          # 'omnidocs/': temporarily stores docs of OmniPaxos
+          rm -rf omnidocs
+          # Fetch from the OmniPaxos repository
+          git clone https://github.com/haraldng/omnipaxos.git
+          cd omnipaxos
+          mv docs/ ../omnidocs/
+          cd ..
+          rm -rf omnipaxos
+
+      - name: Commit doc updates
+        run: |
+          ls
+          git config user.name "TimXLHan"
+          git config user.email "tim.han.0000@gmail.com"
+
+          if git diff --quiet; then
+          echo "No changes in the working tree."
+          else
+          echo "Changes found in the working tree."
+          git add . -v
+          git commit -m "Doc updates"
+          git push
+          fi
+
