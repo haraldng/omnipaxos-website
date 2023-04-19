@@ -5,7 +5,7 @@
 # 'omnidocs/': temporarily stores docs of OmniPaxos
 rm -rf utils/omnidocs
 # Fetch from the OmniPaxos repository
-git clone https://github.com/TimXLHan/omnipaxos.git
+git clone https://github.com/haraldng/omnipaxos.git
 cd omnipaxos
 # @temp
 #git checkout doc_sync_to_website
