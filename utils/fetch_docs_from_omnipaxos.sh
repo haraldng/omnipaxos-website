@@ -8,7 +8,7 @@ rm -rf utils/omnidocs
 git clone https://github.com/TimXLHan/omnipaxos.git
 cd omnipaxos
 # @temp
-git checkout doc_sync_to_website
+#git checkout doc_sync_to_website
 mv docs/ ../utils/omnidocs/
 cd ..
 rm -rf omnipaxos
