@@ -1,6 +1,6 @@
 import hljs from 'highlight.js/lib/core';
 
-import javascript from 'highlight.js/lib/languages/javascript';
+import rust from 'highlight.js/lib/languages/rust';
 import json from 'highlight.js/lib/languages/json';
 import bash from 'highlight.js/lib/languages/bash';
 import xml from 'highlight.js/lib/languages/xml';
@@ -9,7 +9,7 @@ import yaml from 'highlight.js/lib/languages/yaml';
 import markdown from 'highlight.js/lib/languages/markdown';
 import python from 'highlight.js/lib/languages/python';
 
-hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('rust', rust);
 hljs.registerLanguage('json', json);
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('html', xml);
