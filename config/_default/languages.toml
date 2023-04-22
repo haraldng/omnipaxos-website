@@ -6,6 +6,14 @@
     languageISO = "EN"
     languageTag = "en-US"
 
+[zh]
+languageName = "中文"
+contentDir = "content/zh"
+weight = 13
+[zh.params]
+languageISO = "ZH"
+languageTag = "zh_CN"
+
 [de]
   languageName = "German"
   contentDir = "content/de"
