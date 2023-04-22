@@ -7,7 +7,7 @@
     languageTag = "en-US"
 
 [zh]
-languageName = "Chinese"
+languageName = "中文"
 contentDir = "content/zh"
 weight = 13
 [zh.params]

@@ -1,11 +1,9 @@
 ---
-title: "Project Info"
+title: "项目信息"
 weight: 8
 toc: false
 ---
-# Project Info
-
-While OmniPaxos is primarily being developed at the [KTH Royal Institute of Technology](https://www.kth.se/en) and [RISE Research Institutes of Sweden](https://www.ri.se/en) in Stockholm, Sweden, we do wish to thank all [contributors](https://github.com/haraldng/omnipaxos/graphs/contributors).
+尽管OmniPaxos主要开发于瑞典斯德哥尔摩的[瑞典皇家理工大学](https://www.kth.se/en)和[瑞典研究院](https://www.ri.se/en), 我们依旧想要感谢各位[贡献者](https://github.com/haraldng/omnipaxos/graphs/contributors)。
 
 <!-- ## Releases
 
@@ -15,13 +13,14 @@ OmniPaxos releases are hosted on [crates.io](https://crates.io/crates/omnipaxos)
 
 OmniPaxos API docs are hosted on [docs.rs](https://docs.rs/kompact/latest/kompact/). -->
 
-## Sources & Issues
+## 源代码 & Issues
 
-The sources for OmniPaxos can be found on [Github](https://github.com/haraldng/omnipaxos).
+OmniPaxos的源代码可以在[Github](https://github.com/haraldng/omnipaxos)中找到。
 
-All issues and requests related to OmniPaxos should be posted there.
+所有与OmniPaxos相关的问题和请求都应发布于此。
 
 <!---
+
 ## Bleeding Edge
 
 This tutorial is built off the `master` branch on GitHub and thus tends to be a bit ahead of what is available in a release.
@@ -32,9 +31,9 @@ omnipaxos_core = { git = "https://github.com/haraldng/omnipaxos", branch = "mast
 ```
 --->
 
-### Documentation
+### 文档
 
-If you need the API docs for the latest master run the following at an appropriate location (e.g., outside another local git repository):
+如果您需要最新的API文档，请在适当的位置（例如，在另一个本地git存储库之外）运行以下内容：
 
 ```bash
 git checkout https://github.com/haraldng/omnipaxos
