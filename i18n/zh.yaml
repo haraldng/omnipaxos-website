@@ -1,0 +1,17 @@
+- id: get-started
+  translation: "快速起步"
+
+- id: on-this-page
+  translation: "在此页面上"
+
+- id: search-text
+  translation: "搜索..."
+
+- id: 404-title
+  translation: "找不到页面 :("
+
+- id: 404-text
+  translation: "您正在查找的页面不存在或已被移动。"
+
+- id: browse
+  translation: "浏览"

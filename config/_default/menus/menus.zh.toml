@@ -29,7 +29,7 @@
   url = "/tutorial/lorem/"
 
 [[main]]
-  name = "Docs"
+  name = "教程"
   url = "/docs/foreword/foreword/"
 # url = "/docs/1.0/prologue/introduction/"
   weight = 10
@@ -40,21 +40,21 @@
 #   weight = 15
 
 [[main]]
-  name = "Blog"
+  name = "博客"
   url = "/blog/"
   weight = 20
 
 [[main]]
-  name = "Get Started"
+  name = "快速开始"
   weight = 30
   identifier = "get-started"
   url = "/docs/prologue/introduction/"
 
 [[main]]
-  name = "Quick Start"
+  name = "快速开始"
   weight = 40
-  identifier = "quick-start"
-  url = "/docs/prologue/quick-start/"
+  identifier = "快速开始"
+  url = "/docs/foreword/getting-started/"
   parent = "get-started"
 
 [[main]]

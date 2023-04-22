@@ -1,12 +1,13 @@
 ---
-title: "Foreword"
+title: "前序"
 weight: 2
 toc: false
 ---
-OmniPaxos is a replicated log library implemented in Rust. OmniPaxos aims to hide the complexities of consensus to provide users a replicated log that is as simple to use as a local log. 
+OmniPaxos是一个基于Rust实现的分布式日志 (replicated log)库。OmniPaxos旨在隐藏共识的复杂性，为用户提供一个与本地日志一样简单易用的分布式日志。
 
-Similar to Raft, OmniPaxos can be used to build strongly consistent services such as replicated state machines. Additionally, the leader election of OmniPaxos offers better resilience to partial connectivity and more flexible and efficient reconfiguration compared to Raft.
+与Raft类似，OmniPaxos可用于构建强一致性服务，如复制状态机。此外，与Raft相比，OmniPaxos的领导者选举(leader election)提供了更好的部分连接(partial connectivity)恢复能力和更灵活高效的重新配置。
 
-The library consist of two workspaces: `omnipaxos_core` and `omnipaxos_storage`. The `omnipaxos_core` implements the algorithms of OmniPaxos as plain Rust structs and you need to implement the actual networking yourself (we describe how to send and handle messages [here](omnipaxos/communication.md)). You can provide your own implementation for storing the log and state of OmniPaxos, but we also provide both in-memory and persistent storage implementations that work out of the box in `omnipaxos_storage`.
+该库由两个工作区组成：`omnipaxos_core`和`omnipaxos_storage`。`omnipaxos_core`将OmniPaxos的算法实现为普通的Rust结构体，您需要自己实现对应的网络传输模块(我们在[这里](omnipaxos/communication.md)描述了如何发送和处理消息)。您可以提供自己的实现来存储OmniPaxos的日志和状态，但我们也提供基于内存和基于持久存储的实现，它们可以在`OmniPaxos_storage`中开箱即用。
 
-All the code from the tutorial can be found in [examples](https://github.com/haraldng/omnipaxos/tree/master/examples). In addition to the tutorial style presentation in this book, examples of usages of OmniPaxos can be found in the [tests](https://github.com/haraldng/omnipaxos/tree/master/tests).
+本教程中的所有代码都可以在[示例](https://github.com/haraldng/omnipaxos/tree/master/examples)中找到。除了本教程中的演示外，OmniPaxos的用法示例也可以在[测试](https://github.com/haraldng/omnipaxos/tree/master/tests)中找到。
+
