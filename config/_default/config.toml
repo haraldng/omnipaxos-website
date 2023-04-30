@@ -1,4 +1,4 @@
-baseurl = "https://omnipaxos.com/"
+baseurl = "https://haraldng.github.io/omnipaxos-website"
 canonifyURLs = false
 disableAliases = true
 disableHugoGeneratorInject = true
