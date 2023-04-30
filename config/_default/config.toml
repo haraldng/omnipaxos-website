@@ -65,6 +65,8 @@ rel  = "sitemap"
   blog = "/blog/:title/"
 # docs = "/docs/1.0/:sections[1:]/:title/"
 
+[minify]
+disableJS = true
 [minify.tdewolff.html]
   keepWhitespace = false
 
