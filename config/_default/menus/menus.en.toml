@@ -38,14 +38,19 @@
   weight = 20
 
 [[main]]
-  name = "Get Started"
+  name = "People"
+  url = "/people/"
   weight = 30
+
+[[main]]
+  name = "Get Started"
+  weight = 40
   identifier = "get-started"
   url = "/docs/prologue/introduction/"
 
 [[main]]
   name = "Resources"
-  weight = 40
+  weight = 50
   identifier = "resources"
   url = "/resources/"
   parent = "get-started"
