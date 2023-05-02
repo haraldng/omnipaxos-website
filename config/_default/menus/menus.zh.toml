@@ -9,25 +9,24 @@
   url = "/blog/"
   weight = 20
 
-#[[main]]
-#  name = "快速开始"
-#  weight = 30
-#  identifier = "get-started"
-#  url = "/docs/prologue/introduction/"
-#
-#[[main]]
-#  name = "快速开始"
-#  weight = 40
-#  identifier = "快速开始"
-#  url = "/docs/foreword/getting-started/"
-#  parent = "get-started"
+[[main]]
+name = "团队"
+url = "/people/"
+weight = 30
 
-#[[main]]
-#  name = "Tutorial"
-#  weight = 50
-#  identifier = "tutorial"
-#  url = "https://getdoks.org/tutorial/introduction/"
-#  parent = "get-started"
+[[main]]
+name = "Get Started"
+weight = 40
+identifier = "get-started"
+url = "/docs/prologue/introduction/"
+
+[[main]]
+name = "学习资料"
+weight = 50
+identifier = "resources"
+url = "/resources/"
+parent = "get-started"
+
 
 [[social]]
   name = "GitHub"
