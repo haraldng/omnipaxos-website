@@ -1,0 +1,134 @@
+---
+title: "Meet our team"
+description: ""
+date: 2023-05-01T12:44:05+02:00
+lastmod: 2023-05-01T12:44:05+02:00
+draft: false
+images: []
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+      .grid-researchers {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .member {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .member-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .member-title {
+        margin-top: 1px;
+        font-style: italic;
+        color: #999;
+        font-size: 16px;
+		  }
+      .member-photo {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .section-header {
+        grid-column: 1 / -1;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        font-weight: bold;
+        font-size: 24px;
+        text-align: center;
+		  }
+		  .link-container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 10px;
+        font-size: 16px;
+        color: #999;
+        align-items: center;
+      }
+		  .link {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        color: #999;
+        font-size: 16px;
+        text-decoration: none;
+      }
+		.link:hover {
+			color: #000;
+			text-decoration: underline;
+		}
+		.icon {
+			margin-right: 5px;
+			font-size: 20px;
+		}
+</style>
+</head>
+<body>
+<p>While OmniPaxos is primarily being developed at the <a href="https://www.kth.se/en">KTH Royal Institute of Technology</a> and <a href="https://www.ri.se/en">RISE Research Institutes of Sweden</a>, we do wish to thank all <a href="https://github.com/haraldng/omnipaxos/graphs/contributors">contributors</a>.
+</p>
+<div class="member">
+  <img src="images/harald-c.jpg" alt="HN" class="member-photo">
+  <div class="member-name">Harald Ng</div>
+  <div class="member-title">Creator and Maintainer</div>
+  <a class="link" href="https://twitter.com/haraldng">
+    <a href="https://twitter.com/haraldng?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @haraldng</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </a>
+</div>
+<div class="section-header">Researchers</div>
+<div class="grid-researchers">
+  <div class="member">
+    <img src="images/parisc.jpeg" alt="PC" class="member-photo">
+    <div class="member-name">Paris Carbone</div>
+  </div>
+  <div class="member">
+    <img src="images/seif.jpeg" alt="SH" class="member-photo">
+    <div class="member-name">Seif Haridi</div>
+  </div>
+</div>
+<div class="section-header">MSc Students/Research Engineers</div>
+<div class="grid-container">
+  <div class="member">
+    <img src="images/jonathan2.jpg" alt="JA" class="member-photo">
+    <div class="member-name">Jonathan Arns</div>
+  </div>
+  <div class="member">
+    <img src="images/tim.jpg" alt="TH" class="member-photo">
+    <div class="member-name">Tim Han</div>
+  </div>
+<!--  <div class="member">-->
+<!--    <img src="member4.jpg" alt="KH" class="member-photo">-->
+<!--    <div class="member-name">Kevin Harrison</div>-->
+<!--  </div>-->
+</div>
+<div class="section-header">Alumni</div>
+<div class="grid-container">
+  <div class="member">
+    <img src="images/alexandru.png" alt="AM" class="member-photo">
+    <div class="member-name">Alexandru Mîndru</div>
+  </div>
+  <div class="member">
+    <img src="images/abyel.jpg" alt="AT" class="member-photo">
+    <div class="member-name">Abyel Tesfay</div>
+  </div>
+  <div class="member">
+    <img src="images/max1.jpg" alt="MM" class="member-photo">
+    <div class="member-name">Max Meldrum</div>
+  </div>
+</div>
+</body>
+</html>
+
