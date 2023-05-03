@@ -86,6 +86,8 @@ docsRepoSubPath = ""
 editPage = false
 lastMod = false
 
+googleAnalyticsID = true
+
 [sections]
   sectionNav = ["docs", "guides"]
 
