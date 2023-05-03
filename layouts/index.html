@@ -6,7 +6,12 @@
     </div>
     <div class="col-lg-9 col-xl-8 text-center">
       <p class="lead">{{ .Params.lead | safeHTML }}</p>
-      <a class="btn btn-primary btn-lg px-4 mb-2" href="/docs/{{ if .Site.Params.options.docsVersioning }}{{ .Site.Params.docsVersion }}/{{ end }}/foreword/getting-started/" role="button">{{ i18n "get-started" }}</a>
+      {{ if eq $.Site.Language.LanguageName "English" }}
+        <a class="btn btn-primary btn-lg px-4 mb-2" href="/docs/{{ if .Site.Params.options.docsVersioning }}{{ .Site.Params.docsVersion }}/{{ end }}/foreword/getting-started/" role="button">{{ i18n "get-started" }}</a>
+      {{ end }}
+      {{ if eq $.Site.Language.LanguageName "中文" }}
+      <a class="btn btn-primary btn-lg px-4 mb-2" href="/zh/docs/{{ if .Site.Params.options.docsVersioning }}{{ .Site.Params.docsVersion }}/{{ end }}/foreword/getting-started/" role="button">{{ i18n "get-started" }}</a>
+      {{ end }}
       <p class="meta">Open-source Apache 2.0 Licensed. <a href="https://github.com/haraldng/omnipaxos">GitHub</a></p>
     </div>
     <div class="container">
