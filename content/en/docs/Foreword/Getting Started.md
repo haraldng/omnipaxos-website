@@ -3,7 +3,6 @@ title: "Getting Started"
 weight: 4
 toc: false
 ---
-# Getting Started
 We aim to make a release on crates soon, but for now, the easiest way to use OmniPaxos is to have it as a GitHub dependency.
 <!-- ## Setting up Rust
 It is recommended to run OmniPaxos on a *nightly* version of the Rust toolchain.

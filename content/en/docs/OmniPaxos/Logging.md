@@ -1,9 +1,8 @@
 ---
 title: "Logging"
-weight: 26
+weight: 28
 toc: false
 ---
-# Logging
 
 OmniPaxos uses the [slog](https://crates.io/crates/slog) crate to provide system-wide logging facilities. Logging works out of the box with a default asynchronous console and file logger implementation.
 
