@@ -42,18 +42,18 @@
   url = "/people/"
   weight = 30
 
-[[main]]
-  name = "Get Started"
-  weight = 40
-  identifier = "get-started"
-  url = "/docs/prologue/introduction/"
+#[[main]]
+#  name = "Get Started"
+#  weight = 40
+#  identifier = "get-started"
+#  url = "/docs/prologue/introduction/"
 
 [[main]]
   name = "Resources"
   weight = 50
   identifier = "resources"
   url = "/resources/"
-  parent = "get-started"
+#  parent = "get-started"
 
 #[[main]]
 #  name = "Tutorial"

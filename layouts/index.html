@@ -9,6 +9,11 @@
       <a class="btn btn-primary btn-lg px-4 mb-2" href="/docs/{{ if .Site.Params.options.docsVersioning }}{{ .Site.Params.docsVersion }}/{{ end }}/foreword/getting-started/" role="button">{{ i18n "get-started" }}</a>
       <p class="meta">Open-source Apache 2.0 Licensed. <a href="https://github.com/haraldng/omnipaxos">GitHub</a></p>
     </div>
+    <div class="container">
+      <div class="container">
+        {{- .Content -}}
+      </div>
+    </div>
   </div>
 </section>
 {{ end }}
@@ -53,7 +58,7 @@
   <div class="container">
     <div class="row justify-content-center text-center">
       <div class="col-lg-5">
-        <h2 class="h4">日志 API 👨‍💻</h2>
+        <h2 class="h4">Log API 👨‍💻</h2>
         <p>OmniPaxos提供了一个API, 令复制日志的使用像使用仅追加日志一样简单。</p>
       </div>
       <div class="col-lg-5">
@@ -83,14 +88,3 @@
 </section>
 {{ end }}
   {{ end }}
-
-
-{{ define "sidebar-footer" }}
-<section class="section section-sm container-fluid">
-  <div class="row justify-content-center text-center">
-    <div class="col-lg-9">
-      {{- .Content -}}
-    </div>
-  </div>
-</section>
-{{ end }}
