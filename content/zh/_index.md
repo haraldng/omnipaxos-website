@@ -1,7 +1,7 @@
 ---
 title : "OmniPaxos"
 description: "OmniPaxos is a distributed log library in Rust."
-lead: "OmniPaxos is a distributed log library in Rust."
+lead: "OmniPaxos 是一个 Rust 语言实现的分布式日志库"
 date: 2020-10-06T08:47:36+00:00
 lastmod: 2020-10-06T08:47:36+00:00
 draft: false
