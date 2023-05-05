@@ -1,5 +1,5 @@
 ---
 title: "OmniPaxos"
-weight: 11
+weight: 9
 toc: false
 ---

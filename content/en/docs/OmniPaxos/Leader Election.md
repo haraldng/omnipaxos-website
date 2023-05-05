@@ -1,6 +1,6 @@
 ---
 title: "Leader Election"
-weight: 20
+weight: 18
 toc: false
 ---
 A unique feature of Omni-Paxos is the guaranteed progress with one quorum-connected server using Ballot Leader Election (BLE). In this section, we will see how the leader election is used in OmniPaxos.

@@ -1,6 +1,6 @@
 ---
 title: "Logging"
-weight: 28
+weight: 26
 toc: false
 ---
 

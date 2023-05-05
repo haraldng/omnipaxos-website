@@ -1,6 +1,6 @@
 ---
 title: "Compaction"
-weight: 22
+weight: 20
 toc: false
 ---
 As time passes, the replicated log in `OmniPaxos` will grow large. To avoid letting the log growing infinitely large, we support two ways of compaction that can be initiated by users:
@@ -9,7 +9,7 @@ As time passes, the replicated log in `OmniPaxos` will grow large. To avoid lett
 Trimming the log removes all entries up to a certain index. Since the entries are deleted from the log, a trim operation can only be done if **ALL** nodes in the cluster have decided up to that index. Example:
 
 ```rust,edition2018,no_run,noplaypen
-use omnipaxos_core::sequence_paxos::CompactionErr;
+use omnipaxos::sequence_paxos::CompactionErr;
 
 // we will try trimming the first 100 entries of the log.
 let trim_idx = Some(100);  // using `None` will use the highest trimmable index
@@ -36,7 +36,7 @@ Trimming compacts the log and discards any data preceding the trim index. For sa
 
 ```rust,edition2018,no_run,noplaypen
 use std::collections::HashMap;
-use omnipaxos_core::storage::Snapshot;
+use omnipaxos::storage::Snapshot;
 
 #[derive(Clone, Debug)]
 pub struct KVSnapshot {

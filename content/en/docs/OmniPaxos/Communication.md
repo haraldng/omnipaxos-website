@@ -1,6 +1,6 @@
 ---
 title: "Communication"
-weight: 16
+weight: 14
 toc: false
 ---
 As previously mentioned, the user has to send/receive messages between servers themselves. In this section, we show how the user should interact with `OmniPaxos` and its incoming and outgoing messages.
@@ -9,7 +9,7 @@ As previously mentioned, the user has to send/receive messages between servers t
 When a message is received from the network layer intended for our node, we need to handle it in `OmniPaxos`.
 
 ```rust,edition2018,no_run,noplaypen
-use omnipaxos_core::messages::Message;
+use omnipaxos::messages::Message;
 
 // handle incoming message from network layer
 let msg: Message<KeyValue> = ...;    // message to this node e.g. `msg.get_receiver() == 2`
