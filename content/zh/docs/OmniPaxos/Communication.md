@@ -9,7 +9,7 @@ toc: false
 当从网络层接收到针对我们节点的消息时，我们需要在`OmniPaxos`中处理它。
 
 ```rust,edition2018,no_run,noplaypen
-use omnipaxos_core::messages::Message;
+use omnipaxos::messages::Message;
 
 // handle incoming message from network layer
 let msg: Message<KeyValue, KVSnapshot> = ...;    // message to this node e.g. `msg.get_receiver() == 2`

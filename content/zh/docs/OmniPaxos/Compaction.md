@@ -9,7 +9,7 @@ toc: falsesuo
 切割日志会删除某个索引之前的所有项。由于项是从日志中删除的，因此只有当集群中的**所有**节点已决定到该索引时，才能执行切割操作。例子：
 
 ```rust,edition2018,no_run,noplaypen
-use omnipaxos_core::sequence_paxos::CompactionErr;
+use omnipaxos::sequence_paxos::CompactionErr;
 
 // we will try trimming the first 100 entries of the log.
 let trim_idx = Some(100);  // using `None` will use the highest trimmable index
@@ -36,7 +36,7 @@ match omni_paxos.trim(trim_idx) {
 
 ```rust,edition2018,no_run,noplaypen
 use std::collections::HashMap;
-use omnipaxos_core::storage::Snapshot;
+use omnipaxos::storage::Snapshot;
 
 #[derive(Clone, Debug)]
 pub struct KVSnapshot {

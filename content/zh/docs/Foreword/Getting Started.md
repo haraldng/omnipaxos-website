@@ -17,10 +17,10 @@ omnipaxos = "LATEST_VERSION"
 
 ```toml
 [dependencies]
-omnipaxos_core = { git = "https://github.com/haraldng/omnipaxos" }
+omnipaxos = { git = "https://github.com/haraldng/omnipaxos" }
 ```
 
-在`omnipaxos_core/examples/kv_store`中, 我们展示了一个如何基于tokio使用OmniPaxos复制KV的示例。
+在`omnipaxos/examples/kv_store`中, 我们展示了一个如何基于tokio使用OmniPaxos复制KV的示例。
 
 ## 文档
 除了本教程，API文档可以在 [https://docs.rs/omnipaxos](https://docs.rs/omnipaxos) 上找到。

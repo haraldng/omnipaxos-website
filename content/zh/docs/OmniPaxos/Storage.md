@@ -106,9 +106,7 @@ omnipaxos_storage = { version = "LATEST_VERSION", default-features = true }
 `PersistentStorage`是一个持久化存储实现，用于存储复制的日志和OmniPaxos的状态。本模块使用[Commitlog](https://crates.io/crates/commitlog)存储复制的日志, 同时系统状态的存储默认使用[sled](https://crates.io/crates/sled)。可以使用特性`rocksdb`将系统状态的存储更改为使用[RocksDB](https://crates.io/crates/rocksdb) 而非sled。用户可以通过`PersistentStorageConfig`配置日志项的路径、OmniPaxos状态以及与存储相关的选项。配置结构具有一个用于生成默认配置的`default()`构造函数，以及一个将存储路径和选项作为参数的构造函数`with()`。
 
 ```rust,edition2018,no_run,noplaypen
-use omnipaxos_core::{
-    sequence_paxos::{OmniPaxos, OmniPaxosConfig},
-};
+use omnipaxos::{OmniPaxos, OmniPaxosConfig};
 use omnipaxos_storage::{
     persistent_storage::{PersistentStorage, PersistentStorageConfig},
 };

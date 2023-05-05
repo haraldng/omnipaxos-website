@@ -21,9 +21,7 @@ pub struct KeyValue {
 定义了日志项和存储的结构后，我们现在可以继续创建`OmniPaxos`副本实例。假设我们希望在三台服务器上复制键值存储。在节点2上，我们将执行以下操作：
 
 ```rust,edition2018,no_run,noplaypen
-use omnipaxos_core::{
-    omni_paxos::{OmniPaxos, OmniPaxosConfig},
-};
+use omnipaxos::{OmniPaxos, OmniPaxosConfig};
 use omnipaxos_storage::{
     memory_storage::MemoryStorage,
 };
@@ -83,7 +81,7 @@ persist_conf.set_path(my_path); // set the path to the persistent storage
 my_config.set_commitlog_options(my_logopts);
 
 // Re-create storage with previous state, then create `OmniPaxos`
-let recovered_storage = PersistentStorage::open(persist_conf); 
+let recovered_storage = PersistentStorage::open(persist_conf);
 let mut recovered_paxos = omni_paxos_config.build(recovered_storage);
 recovered_paxos.fail_recovery();
 ```
