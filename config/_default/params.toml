@@ -10,33 +10,33 @@ description = "OmniPaxos is a distributed log library in Rust."
 # docsVersion = "0.3"
 
 ## Open Graph
-images = ["doks.png"]
+images = ["content/en/banner.png"]
 ogLocale = "en_US"
 domainTLD = "omnipaxos.com"
 titleHome = "OmniPaxos"
 
 ## Twitter Cards
-twitterSite = "@getdoks"
-twitterCreator = "@henkverlinde"
+twitterSite = "@haraldng"
+twitterCreator = "@haraldng"
 
 ## JSON-LD
 # schemaType = "Person"
 schemaType = "Organization"
-schemaName = "Doks"
-schemaAuthor = "Henk Verlinde"
-schemaAuthorTwitter = "https://twitter.com/henkverlinde"
-schemaAuthorLinkedIn = "https://www.linkedin.com/in/henkverlinde/"
+schemaName = "OmniPaxos"
+schemaAuthor = "Harald Ng"
+schemaAuthorTwitter = "https://twitter.com/haraldng"
+schemaAuthorLinkedIn = "https://www.linkedin.com/in/haraldng/"
 schemaAuthorGitHub = "https://github.com/h-enk"
 schemaLocale = "en-US"
-schemaLogo = "logo-doks.png"
+schemaLogo = "content/en/banner.png"
 schemaLogoWidth = 512
 schemaLogoHeight = 512
-schemaImage = "doks.png"
+schemaImage = "content/en/banner.png"
 schemaImageWidth = 1280
 schemaImageHeight = 640
-schemaTwitter = "https://twitter.com/getdoks"
+schemaTwitter = "https://twitter.com/haraldng"
 schemaLinkedIn = ""
-schemaGitHub = "https://github.com/h-enk/doks"
+schemaGitHub = "https://github.com/haraldng/omnipaxos"
 schemaSection = "blog"
 
 ## Sitelinks Search Box
@@ -61,7 +61,7 @@ singleSize = false
 imageAddClass = "img-fluid lazyload blur-up"
 
 ### Image template
-defaultImage = "default-image.png" # put in `./assets/images/`
+defaultImage = "content/en/banner.png" # put in `./assets/images/`
 fillImage = "1270x740 Center" # normalize image size
 
 # Footer
