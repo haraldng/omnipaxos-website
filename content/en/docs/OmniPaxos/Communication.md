@@ -1,6 +1,6 @@
 ---
 title: "Communication"
-weight: 16
+weight: 14
 toc: false
 ---
 As previously mentioned, the user has to send/receive messages between servers themselves. In this section, we show how the user should interact with `OmniPaxos` and its incoming and outgoing messages.
