@@ -3,7 +3,13 @@ title: "OmniPaxos"
 weight: 12
 toc: false
 ---
-集群中的每个服务器都应该有一个`OmniPaxos`结构体的本地实例。`OmniPaxos`维护分布式日志的本地状态，处理传入消息并生成传出消息，用户必须使用其网络实现来获取和发送这些消息。用户还需通过`OmniPaxos`访问日志。
+集群中的每个服务器都应该有一个`OmniPaxos`结构体的本地实例。`OmniPaxos`维护分布式日志的本地状态，处理传入消息并生成传出消息，用户必须使用其网络实现来获取和发送这些消息。用户还需通过`OmniPaxos`访问日志。为了本教程的方便，我们将使用一些开箱即用的宏和存储实现。这需要我们修改`Cargo.toml`:
+
+```toml
+[dependencies]
+omnipaxos = { version = "LATEST_VERSION", features = ["macros"] }
+omnipaxos_storage = "LATEST_VERSION"
+```
 
 ## 示例: 键值存储
 作为本教程的指南，我们将使用OmniPaxos来实现分布式日志，以构建一致的键值存储。
@@ -42,7 +48,7 @@ let omnipaxos_config = OmniPaxosConfig {
 }
 
 let storage = MemoryStorage::<KeyValue, ()>::default();
-let mut omni_paxos = omni_paxos_config.build(storage);
+let mut omni_paxos = omnipaxos_config.build(storage);
 ```
 为了方便起见，`OmniPaxosConfig`还提供了一个构造函数`OmniPaxosConfig::with_hocon()`，该构造函数使用[hocon](https://vleue.com/hocon.rs/hocon/index.html), 用户可以将参数保存在文件`config/node2.conf`中。
 
@@ -82,6 +88,6 @@ my_config.set_commitlog_options(my_logopts);
 
 // Re-create storage with previous state, then create `OmniPaxos`
 let recovered_storage = PersistentStorage::open(persist_conf);
-let mut recovered_paxos = omni_paxos_config.build(recovered_storage);
+let mut recovered_paxos = omnipaxos_config.build(recovered_storage);
 recovered_paxos.fail_recovery();
 ```
