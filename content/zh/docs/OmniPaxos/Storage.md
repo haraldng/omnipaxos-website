@@ -6,10 +6,10 @@ toc: false
 您可以自由地将任何存储实现与`OmniPaxos`一起使用。唯一的要求是实现`Storage`特性。OmniPaxos包括`omnipaxos_storage`包，它提供了两种开箱即用的存储实现：`MemoryStorage`和`PersistentStorage`。
 
 ## 引入`omnipaxos_storage`
-要使用提供的存储实现，我们需要将`omnipaxos_storage`添加到cargo的依赖项中。
+要使用提供的存储实现，我们需要将`omnipaxos_storage`添加到cargo的依赖项中。您可以在[crates](https://crates.io/crates/omnipaxos_storage)上找到最新版本。
 ```rust,edition2018,no_run,noplaypen
 [dependencies]
-omnipaxos_storage = { git = "https://github.com/haraldng/omnipaxos", default-features = true } 
+omnipaxos_storage = { version = "LATEST_VERSION", default-features = true }
 ```
 
 **如果**您**确实**决定实现自己的存储模块，我们建议您将`MemoryStorage`作为实现`Storage`所需功能的参考。
