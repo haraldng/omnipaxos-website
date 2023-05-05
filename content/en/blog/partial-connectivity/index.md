@@ -28,7 +28,7 @@ This situation is distinct from the standard assumption of network partitions, w
 
 ![Quorum-Loss scenario](images/quorum-loss.png)
 
-Consider a situation where we initially have 5 servers (A-E) that are fully-connected. Server C is initially able to correctly function as the leader since it's connected to a majority quorum. But later, partial connectivity causes it to no longer be connected to a quorum and therefore unable to commit any new entries. At this point, servers B, D, and E detect that they have lost connection to their leader C and initiate a new election, but they all fail to receive a majority of votes which is required for becoming leader. On the other hand, server A is connected to a quorum and potentially able to function as the leader. However, since it is still connected to its leader C, it will not initiate a new election to become the leader.
+Consider a situation where we initially have 5 servers (A-E) that are fully-connected. Server C is initially able to correctly function as the leader since it's connected to a majority quorum. But later, partial connectivity causes it to no longer be connected to a quorum and therefore unable to commit any new entries. At this point, servers B, D, and E detect that they have lost connection to their leader C but are unable to become leaders themselves as they are not connected to a quorum. On the other hand, server A is connected to a quorum and able to function as the leader. However, since A is still connected to its leader C, it does not initiate a new election to become the leader.
 
 This results in a deadlock for protocols such as Raft and MultiPaxos where servers use the alive status of the leader to determine if an election should be initiated. Viewstamped Replication (VR) will also be deadlocked despite its round-robin election scheme. A server only votes for a leader (view) change if it observes a majority that also wants to do the same. This design originates in the classic assumption we showed earlier, where servers are fully connected within each partition. But here, it results in servers B-E not voting for a leader change as required.
 
@@ -46,7 +46,7 @@ The constrained-election scenario is similar to the quorum-loss scenario, but th
 
 ![Chained scenario](images/chained.png)
 
-In the chained scenario, we initially have three fully-connected servers where B is the leader. But then B and C disconnect, which makes C think that B has failed, and try take over leadership with a higher term number. Server A will adopt C’s higher term number and subsequently reject proposals from B. When A rejects B, it will include the current term number, and B will therefore get to know that it has been overtaken. After a while, B will timeout hearing from C and the described scenario will reoccur in the reversed direction; B will call for a new election with an even higher term number and regain leadership. This results in a livelock where the leader repeatedly changes. Servers have inconsistent views on who is alive and trigger new terms as soon as the leader is suspected to have failed.
+In the chained scenario, we initially have three fully-connected servers where B is the leader. B and C disconnect causing C, believing B has failed, to try and take over leadership with a higher term number. Server A will adopt C’s higher term number and subsequently reject proposals from B. When A rejects B, it will include the current term number, and B will therefore get to know that it has been overtaken. After a while of not hearing from the new leader C, server B will timeout and the described scenario will reoccur in the reversed direction; B will call for a new election with an even higher term number and regain leadership. This results in a livelock where the leader repeatedly changes. The servers have inconsistent views on who is alive and trigger new terms as soon as the leader is suspected to have failed.
 
 **Key insight:** Gossiping the identity of the current leader can cause liveness issues if servers have inconsistent views on who is alive.
 
@@ -74,7 +74,7 @@ In this scenario, all the follower servers become disconnected from the leader. 
 
 ![chained-omni](images/chained-omni.png)
 
-In the chained scenario, once again C detects the need for a new leader and, together with A’s vote, becomes the next leader. This time, however, the election of C is not gossiped to server B since the ballots only include the A's own ballot number and QC status. This means that server B will not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
+In the chained scenario, once again C detects the need for a new leader and, together with A’s vote, becomes the next leader. This time, however, the election of C is not gossiped to server B. This is because the heartbeats that A sends only includes its own ballot number and NOT the ballot of its leader. Server B will not see that C has been elected and therefore not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
 
 ### Conclusion
 
