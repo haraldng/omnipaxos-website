@@ -50,25 +50,19 @@ let omnipaxos_config = OmniPaxosConfig {
 let storage = MemoryStorage::<KeyValue, ()>::default();
 let mut omni_paxos = omnipaxos_config.build(storage);
 ```
-为了方便起见，`OmniPaxosConfig`还提供了一个构造函数`OmniPaxosConfig::with_hocon()`，该构造函数使用[hocon](https://vleue.com/hocon.rs/hocon/index.html), 用户可以将参数保存在文件`config/node2.conf`中。
+为了方便起见，`OmniPaxosConfig` 还提供了一个构造函数`OmniPaxosConfig::with_toml()`，该构造函数使用[TOML](https://toml.io), 用户可以将参数保存在文件`config/node1.toml`中。
 
-```json
-{
-    config_id: 1,
-    pid: 2,
-    log_file_path: "/omnipaxos/logs"
-}
+```toml
+configuration_id = 1
+pid = 2
+peers = [1, 3]
+logger_file_path = "/omnipaxos/logs"
 ```
 这些参数被加载后可以用来构建`OmniPaxosConfig`:
 
 ```rust,edition2018,no_run,noplaypen
-let cfg = HoconLoader::new()
-    .load_file("tests/config/node2.conf")
-    .expect("Failed to load hocon file")
-    .hocon()
-    .unwrap();
-
-let omni_paxos_config = OmniPaxosConfig::with_hocon(cfg);
+let config_file_path = "config/node1.toml";
+let omnipaxos_config = OmniPaxosConfig::with_toml(config_file_path);
 ```
 
 ## 故障恢复
