@@ -9,12 +9,12 @@ weight: 50
 images: []
 categories: []
 tags: []
-contributors: ["Kevin Harrison"]
+contributors: ["Kevin Harrison", "Harald Ng"]
 pinned: false
 homepage: false
 ---
 
-State machine replication (SMR) protocols such as Raft, VR, and MultiPaxos are widely used to build replicated services in the cloud. These protocols depend on a stable leader to make progress. However, as shown by the 6+ hour Cloudflare [outage](https://blog.cloudflare.com/a-byzantine-failure-in-the-real-world/) in 2020, partial connectivity can cause the leader election in these protocols to fail. In this post, we will explore what partial connectivity is, why existing algorithms fail under such conditions, and how OmniPaxos addresses this issue.
+State machine replication (SMR) protocols such as Raft, VR, and MultiPaxos are widely used to build replicated services in the cloud. These protocols depend on a stable leader to make progress. However, as shown by the 6+ hour Cloudflare [outage](https://blog.cloudflare.com/a-byzantine-failure-in-the-real-world/) in 2020, partial connectivity can cause the leader election in these protocols to fail. In a previous [post by Howard and Abraham](https://decentralizedthoughts.github.io/2020-12-12-raft-liveness-full-omission/), they showed how Raft can overcome some partial connectivity scenarios by adding some new logic to the leader election. In this post, we will go to the roots of the partial connectivity problems, generalize them for other protocols, and present a new scenario that Raft cannot overcome even with the proposed patches.
 
 ## What is partial connectivity?
 
@@ -28,17 +28,19 @@ This situation is distinct from the standard assumption of network partitions, w
 
 ![Quorum-Loss scenario](images/quorum-loss.png)
 
-Consider a situation where we initially have 5 servers (A-E) that are fully-connected. Server C is initially able to correctly function as the leader since it's connected to a majority quorum. But later, partial connectivity causes it to no longer be connected to a quorum and therefore unable to commit any new entries. At this point, servers B, D, and E detect that they have lost connection to their leader C but are unable to become leaders themselves as they are not connected to a quorum. On the other hand, server A is connected to a quorum and able to function as the leader. However, since A is still connected to its leader C, it does not initiate a new election to become the leader.
+Consider a situation where we initially have 5 servers (A-E) that are fully-connected. Server C is initially able to correctly function as the leader since it's connected to a majority quorum. But later, partial connectivity causes it to no longer be connected to a quorum and therefore unable to commit any new entries. At this point, servers B, D, and E detect that they have lost connection to their leader (C). But they are unable to become leaders themselves as they are not connected to a quorum. On the other hand, server A is connected to a quorum and able to potentially function as the leader. However, since A is still connected to its leader C, it does not initiate a new election.
 
-This results in a deadlock for protocols such as Raft and MultiPaxos where servers use the alive status of the leader to determine if an election should be initiated. Viewstamped Replication (VR) will also be deadlocked despite its round-robin election scheme. A server only votes for a leader (view) change if it observes a majority that also wants to do the same. This design originates in the classic assumption we showed earlier, where servers are fully connected within each partition. But here, it results in servers B-E not voting for a leader change as required.
+This results in a deadlock for protocols that simply use the alive status of the leader to determine if an election should be initiated (e.g., [MultiPaxos](https://www.cs.cornell.edu/courses/cs7412/2011sp/paxos.pdf)) . Viewstamped Replication (VR) will also be deadlocked despite its round-robin election scheme. A server only votes for a leader (view) change if it observes a majority that also wants to do the same. This design originates in the classic assumption we showed earlier, where servers are fully connected within each partition. But here, it results in servers B-E not voting for a leader change as required.
 
-**Key insight:** The leader’s alive-status alone is insufficient to determine leader change; the leader must also be quorum-connected. Furthermore, servers should be able to vote for another server as long as they are connected.
+**Key insight:** The leader’s alive-status alone is insufficient to determine leader change; the leader must also be quorum-connected. Furthermore, regardless of what a server's connectivity is, it should be able to vote for another server as long as they are connected.
 
 ### Constrained-Election Scenario
 
 ![Constrained-Election scenario](images/constrained.png)
 
-The constrained-election scenario is similar to the quorum-loss scenario, but the leader C is now entirely partitioned from the rest. This time, server A detects the need for a new leader and calls for an election. However, at the time of the network error, servers B and E had a more up-to-date log than A. This poses a problem for protocols like Raft, which require a server to have an up-to-date log to get votes. The network is again in a position where A must become the leader to make progress, but it cannot be elected due to its outdated log. Again, this results in a deadlock where no capable leader can take over.
+The constrained-election scenario is similar to the quorum-loss scenario, but the leader C is now entirely partitioned from the rest. This time, server A detects the need for a new leader and calls for an election. However, at the time of the network error, servers B and E had a more up-to-date log than A. This poses a problem for protocols like Raft, which require a server to have an up-to-date log to get votes. The network is again in a position where A must become the leader to make progress, but it cannot be elected since B and E will not vote for it due to its outdated log. Again, this results in a deadlock where no capable leader can take over.
+
+The up-to-date log requirement is strictly necessary for the safety of Raft. But here, it causes the progress to be suspended even though there is a server (A) that is still connected to a majority.
 
 **Key insight:** There must be no strict requirements to become a leader besides being quorum-connected.
 
@@ -46,17 +48,18 @@ The constrained-election scenario is similar to the quorum-loss scenario, but th
 
 ![Chained scenario](images/chained.png)
 
-In the chained scenario, we initially have three fully-connected servers where B is the leader. B and C disconnect causing C, believing B has failed, to try and take over leadership with a higher term number. Server A will adopt C’s higher term number and subsequently reject proposals from B. When A rejects B, it will include the current term number, and B will therefore get to know that it has been overtaken. After a while of not hearing from the new leader C, server B will timeout and the described scenario will reoccur in the reversed direction; B will call for a new election with an even higher term number and regain leadership. This results in a livelock where the leader repeatedly changes. The servers have inconsistent views on who is alive and trigger new terms as soon as the leader is suspected to have failed.
+In the chained scenario, we initially have three fully-connected servers where B is the leader. Then, B and C disconnect, which causes C to believe that B has failed, and try taking over leadership with a higher term number. Server A will adopt C’s higher term number and subsequently reject proposals from B. When A rejects B, it will include the current term number, and B will therefore get to know that it has been overtaken. After a while of not hearing from the new leader C, server B will timeout and the described scenario will reoccur in the reversed direction; B will call for a new election with an even higher term number and regain leadership. This results in a livelock where the leader repeatedly changes. The servers have inconsistent views on who is alive and trigger new terms as soon as the leader is suspected to have failed.
 
 **Key insight:** Gossiping the identity of the current leader can cause liveness issues if servers have inconsistent views on who is alive.
 
 ## How OmniPaxos Addresses These Scenarios
-
-OmniPaxos is the only SMR protocol that addresses all these scenarios. OmniPaxos incorporates the novel concept of quorum-connectivity into the leader election process, which helps to address the three key insights gained from the different scenarios. Furthermore, Omni-Paxos also completely separates the logic and state for leader election (liveness) from consensus (safety). In this way, it lowers the minimal requirements for the protocol to provide liveness which addresses the partial connectivity issues.
+In the table below, we summarise the most widely-used protocols and how they behave in the described scenarios.
 
 ![table](images/table.png)
 
-Ballot Leader Election (BLE) is the leader election protocol in OmniPaxos and it provides resilience against partial connectivity by guaranteeing the election of a leader that can make progress, as long as such a candidate exists. In BLE, all servers periodically exchange heartbeats with one another. The heartbeats allow servers to know which of their peers are alive, but more importantly, if they are **quorum-connected (QC)**. Each server include their ballot number and a flag indicating their QC status in the heartbeats. This allows servers to detect when the leader fails or loses its quorum-connectivity. Furthermore, it allows only capable servers (i.e., QC servers) to attempt an election and possibly be elected.
+As we see, there is no protocol other than OmniPaxos that can overcome all these scenarios. The novelty of OmniPaxos lies in eliminating all unnecessary restrictions imposed on candidate servers, and instead focus on the only relevant requirement for becoming the leader, which is to be **quorum-connected (QC)**. Therefore, unlike other protocols, OmniPaxos ignores the connectivity of non-candidates, omits gossiping the identity of the current leader, and completely separates the logic and state for leader election (liveness) from replication (safety).
+
+Ballot Leader Election (BLE) is the leader election protocol in OmniPaxos and it provides resilience against partial connectivity by guaranteeing the election of a leader that can make progress, as long as such a candidate exists. In BLE, all servers periodically exchange heartbeats with one another. The heartbeats allow servers to know which of their peers are alive, but more importantly, if they are quorum-connected. Each server include their ballot number and a flag indicating their QC status in the heartbeats. This allows servers to detect when the leader fails or loses its quorum-connectivity. Furthermore, it allows only capable servers (i.e., QC servers) to attempt an election and possibly be elected.
 
 ### OmniPaxos in the Quorum-Loss Scenario
 
@@ -74,7 +77,7 @@ In this scenario, all the follower servers become disconnected from the leader. 
 
 ![chained-omni](images/chained-omni.png)
 
-In the chained scenario, once again C detects the need for a new leader and, together with A’s vote, becomes the next leader. This time, however, the election of C is not gossiped to server B. This is because the heartbeats that A sends only includes its own ballot number and NOT the ballot of its leader. Server B will not see that C has been elected and therefore not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
+In the chained scenario, once again C detects the need for a new leader and, together with A’s vote, becomes the next leader. This time, however, the election of C is not gossiped to server B. This is because the heartbeats that A sends only includes its own ballot number and not the ballot of its leader. Server B will not see that C has been elected and therefore not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
 
 ### Conclusion
 
