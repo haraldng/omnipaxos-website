@@ -7,4 +7,3 @@ draft: false
 images: []
 ---
 
-Coming soon...
