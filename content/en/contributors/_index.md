@@ -1,10 +1,8 @@
 ---
-title: "Contributors"
-description: "The Doks contributors."
-date: 2020-10-06T08:50:29+00:00
-lastmod: 2020-10-06T08:50:29+00:00
-draft: true
+title: "Blog Contributors"
+description: "OmniPaxos Blog contributors."
+date: 2023-05-08T08:50:29+00:00
+lastmod: 2023-05-08T08:50:29+00:00
+draft: false
 images: []
 ---
-
-The Doks contributors.
