@@ -14,7 +14,7 @@ pinned: false
 homepage: false
 ---
 
-State machine replication (SMR) protocols such as Raft, VR, and MultiPaxos are widely used to build replicated services in the cloud. These protocols depend on a stable leader to make progress. However, as shown by the 6+ hour Cloudflare [outage](https://blog.cloudflare.com/a-byzantine-failure-in-the-real-world/) in 2020, partial connectivity can cause the leader election in these protocols to fail. In a previous [post by Howard and Abraham](https://decentralizedthoughts.github.io/2020-12-12-raft-liveness-full-omission/), they showed how Raft can overcome some partial connectivity scenarios by adding some new logic to the leader election. In this post, we will go to the roots of the partial connectivity problems, generalize them for other protocols, and present a new scenario that Raft cannot overcome even with the proposed patches.
+State machine replication (SMR) protocols such as Raft, VR, and MultiPaxos are widely used to build replicated services in the cloud. These protocols depend on a stable leader to make progress. However, as shown by the 6+ hour Cloudflare [outage](https://blog.cloudflare.com/a-byzantine-failure-in-the-real-world/) in 2020, partial connectivity can cause the leader election in these protocols to fail. In a previous [post by Howard and Abraham](https://decentralizedthoughts.github.io/2020-12-12-raft-liveness-full-omission/), they showed how Raft can overcome some partial connectivity scenarios by incorporating new logic into the leader election process. In this post, we will go to the roots of the partial connectivity problems, generalize them for other protocols, and present a new scenario that Raft cannot overcome even with the proposed patches.
 
 ## What is partial connectivity?
 
@@ -23,6 +23,8 @@ Partial connectivity refers to a network failure where two servers become discon
 ![Network errors](images/partition.png)
 
 This situation is distinct from the standard assumption of network partitions, where servers are either part of one partition or another. In partial connectivity, two connected servers may have differing views on the status of their peers. In the partial connectivity example, servers B-E all observe that server A is alive but are unaware of each other’s status. These inconsistent views can lead to serious issues where protocols become unable to progress. Let's examine these issues in three particular scenarios: the quorum-loss scenario, the constrained-election scenario, and the chained scenario.
+
+*Quick recap on Leader Election & Quorums:* Before we analyze the scenarios, let's revisit the concepts of leader election and quorums. In short, consensus protocols are typically leader-based since that provides a simple solution to handle the concurrency from multiple servers proposing at the same time. A dedicated leader handles all proposals and orders them into a log (or sequence). This log defines the single execution order for all servers so that they remain consistent. A log entry must be replicated on a majority of servers before it is committed. This majority is referred to as a "quorum", and is used since any two majorities overlap on at least one server. Thus, if the leader or other servers fail, we can always recover the committed log entries from any majority and maintain safety. *Term* or *Ballot* numbers are identifiers for the different leader epochs and allows servers to compare how updated entries in the log are (higher is more updated).
 
 ### Quorum-Loss Scenario
 
@@ -53,29 +55,29 @@ In the chained scenario, we initially have three fully-connected servers where B
 **Key insight:** Gossiping the identity of the current leader can cause liveness issues if servers have inconsistent views on who is alive.
 
 ## How OmniPaxos Addresses These Scenarios
-In the table below, we summarise the most widely-used protocols and how they behave in the described scenarios.
+The table below summarizes the most widely-used protocols and how they behave in the described scenarios (for more detailed explanations of the properties, see our EuroSys'23 paper).
 
 ![table](images/table.png)
 
-As we see, there is no protocol other than OmniPaxos that can overcome all these scenarios. The novelty of OmniPaxos lies in eliminating all unnecessary restrictions imposed on candidate servers, and instead focus on the only relevant requirement for becoming the leader, which is to be **quorum-connected (QC)**. Therefore, unlike other protocols, OmniPaxos ignores the connectivity of non-candidates, omits gossiping the identity of the current leader, and completely separates the logic and state for leader election (liveness) from replication (safety).
+As we see, there is no protocol other than OmniPaxos that can overcome all these scenarios. The novelty of OmniPaxos lies in eliminating all unnecessary restrictions imposed on candidate servers, and instead focus on the only relevant requirement for becoming the leader, which is to be **quorum-connected (QC)**. Therefore, unlike other protocols, OmniPaxos ignores the connectivity of non-candidates, omits gossiping the identity of the current leader, and completely separates the logic and state for leader election (liveness) from replication (safety). Instead, it uses an implicit form of voting where servers only exchange their connectivity status and their ballot number, and do not announce publicly which leader they vote for.
 
 Ballot Leader Election (BLE) is the leader election protocol in OmniPaxos and it provides resilience against partial connectivity by guaranteeing the election of a leader that can make progress, as long as such a candidate exists. In BLE, all servers periodically exchange heartbeats with one another. The heartbeats allow servers to know which of their peers are alive, but more importantly, if they are quorum-connected. Each server include their ballot number and a flag indicating their QC status in the heartbeats. This allows servers to detect when the leader fails or loses its quorum-connectivity. Furthermore, it allows only capable servers (i.e., QC servers) to attempt an election and possibly be elected.
 
 ### OmniPaxos in the Quorum-Loss Scenario
 
-![ql-omni](images/quorum-loss-omni.png)
+![ql-omni](images/omni-quorum.png)
 
 Due to the quorum-connected status flag, server A correctly identifies the need for a new leader despite still being connected to C. Server A then calls for a new election and, as it is the only quorum-connected server, wins.
 
 ### OmniPaxos in the Constrained-Election Scenario
 
-![c-omni](images/constrained-omni.png)
+![c-omni](images/omni-constrained.png)
 
 In this scenario, all the follower servers become disconnected from the leader. Since A is the only QC server, it will be the only one that increments its ballot number and attempt to become the leader. Server A will win the election because BLE doesn’t require it to have an up-to-date log to become a leader. Moreover, servers B, E, D do not need to be connected to a majority to vote for it. Server A is elected and then syncs with its followers to become up-to-date before serving new requests.
 
 ### OmniPaxos in the Chained Scenario
 
-![chained-omni](images/chained-omni.png)
+![chained-omni](images/omni-chained.png)
 
 In the chained scenario, once again C detects the need for a new leader and, together with A’s vote, becomes the next leader. This time, however, the election of C is not gossiped to server B. This is because the heartbeats that A sends only includes its own ballot number and not the ballot of its leader. Server B will not see that C has been elected and therefore not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
 
