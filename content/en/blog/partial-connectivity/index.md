@@ -2,8 +2,8 @@
 title: "How OmniPaxos handles partial connectivity - and why other protocols can’t"
 description: ""
 excerpt: "Existing state machine replication protocols become unavailable with partial connectivity. OmniPaxos solves the problem by distilling a minimal set of requirements for becoming the leader which separates liveness and safety logic and adds the novel concept of quorum-connectivity to leader election."
-date: 2023-05-03T16:20:54+02:00
-lastmod: 2023-05-03T16:20:54+02:00
+date: 2023-05-08T20:30:54+02:00
+lastmod: 2023-05-08T20:30:54+02:00
 draft: false
 weight: 50
 images: []
@@ -32,7 +32,7 @@ This situation is distinct from the standard assumption of network partitions, w
 
 Consider a situation where we initially have 5 servers (A-E) that are fully connected. Server C is initially able to correctly function as the leader since it's connected to a majority quorum. But later, partial connectivity causes it to no longer be connected to a quorum and therefore unable to commit any new entries. At this point, servers B, D, and E detect that they have lost connection to their leader (C). But they are unable to become leaders themselves as they are not connected to a quorum. On the other hand, server A is connected to a quorum and able to potentially function as the leader. However, since A is still connected to its leader C, it does not initiate a new election.
 
-This results in a deadlock for protocols that simply use the alive status of the leader to determine if an election should be initiated (e.g., [MultiPaxos](https://www.cs.cornell.edu/courses/cs7412/2011sp/paxos.pdf)). Viewstamped Replication (VR) will also be deadlocked despite its round-robin election scheme. A server only votes for a leader (view) change if it observes a majority that also wants to do the same. This design originates in the classic assumption we showed earlier, where servers are fully connected within each partition. But here, it results in servers B-E not voting for a leader change as required.
+This results in a deadlock for protocols that simply use the alive status of the leader to determine if an election should be initiated (e.g., [MultiPaxos](https://www.cs.cornell.edu/courses/cs7412/2011sp/paxos.pdf)). Viewstamped Replication (VR) will also be deadlocked despite its round-robin election scheme. A server only votes for a leader (view) change if it observes a majority that also wants to do the same. This design originates in the classic assumption we showed earlier, where servers are fully connected within each partition. But here, it results in servers B-E not triggering a leader change as required.
 
 **Key insight:** The leader’s alive status alone is insufficient to determine leader change; the leader must also be quorum-connected. Furthermore, regardless of what a server's connectivity is, it should be able to vote for another server as long as they are connected.
 
@@ -55,32 +55,31 @@ In the chained scenario, we initially have three fully-connected servers where B
 **Key insight:** Gossiping the identity of the current leader can cause liveness issues if servers have inconsistent views on who is alive.
 
 ## How OmniPaxos Addresses These Scenarios
-The table below summarizes the most widely-used protocols and how they behave in the described scenarios (for more detailed explanations of the properties, see our EuroSys'23 paper).
+The table below summarizes the most widely-used protocols and how they behave in the described scenarios (for more a detailed explanation, see our EuroSys'23 paper).
 
 ![table](images/table.png)
 
-As we see, there is no protocol other than OmniPaxos that can overcome all these scenarios. The novelty of OmniPaxos lies in eliminating all unnecessary restrictions imposed on candidate servers, and instead focusing on the only relevant requirement for becoming the leader, which is to be **quorum-connected (QC)**. Therefore, unlike other protocols, OmniPaxos ignores the connectivity of non-candidates, omits gossiping the identity of the current leader, and completely separates the logic and state for leader election (liveness) from replication (safety). Instead, it uses an implicit form of voting where servers only exchange their connectivity status and ballot number and do not announce publicly which leader they vote for.
+As we see, there is no protocol other than OmniPaxos that can overcome all these scenarios. The novelty of OmniPaxos lies in eliminating all unnecessary restrictions imposed on candidate servers, and instead focusing on the only relevant requirement for becoming the leader, which is to be **quorum-connected (QC)**. Therefore, unlike other protocols, OmniPaxos ignores the connectivity of non-candidates, omits gossiping the identity of the current leader, and completely separates the logic and state for leader election (liveness) from replication (safety). Instead, it uses an implicit form of voting where servers only exchange their connectivity status and ballot number, and do not publicly announce which leader they vote for. If a server is QC and has the highest ballot number, it will prevail as the leader in the replication protocol and manage to commit new entries.
 
-Ballot Leader Election (BLE) is the leader election protocol in OmniPaxos and it provides resilience against partial connectivity by guaranteeing the election of a leader that can make progress, as long as such a candidate exists. In BLE, all servers periodically exchange heartbeats with one another. The heartbeats allow servers to know which of their peers are alive, but more importantly, if they are quorum-connected. Each server includes its ballot number and a flag indicating its QC status in the heartbeats. This allows servers to detect when the leader fails or loses its quorum-connectivity. Furthermore, it allows only capable servers (i.e., QC servers) to attempt an election and possibly be elected.
+Ballot Leader Election (BLE) is the leader election protocol in OmniPaxos and it provides resilience against partial connectivity by guaranteeing the election of a leader that can make progress, as long as such a candidate exists. In BLE, all servers periodically exchange heartbeats with one another. The heartbeats allow servers to know which of their peers are alive, but more importantly, if they are quorum-connected. Each server includes its ballot number and a flag indicating its QC status in the heartbeats. This allows servers to detect when the leader fails or loses its quorum-connectivity. A server attempts to overtake leadership by incrementing their ballot number. But this can only be done if the server is QC, which ensures that only capable servers (i.e., QC servers) can be elected.
 
 ### OmniPaxos in the Quorum-Loss Scenario
 
 ![ql-omni](images/omni-quorum.png)
-
-Due to the quorum-connected status flag, server A correctly identifies the need for a new leader despite still being connected to C. Server A then calls for a new election and, as it is the only quorum-connected server, wins.
+The heartbeats sent by C will indicate that it has lost its QC stauts. Server A will therefore correctly identify the need for a new leader despite still being connected to C. Since A is still QC, it will increment its ballot number and successfully become the new leader.
 
 ### OmniPaxos in the Constrained-Election Scenario
 
 ![c-omni](images/omni-constrained.png)
 
-In this scenario, all the follower servers become disconnected from the leader. Since A is the only QC server, it will be the only one that increments its ballot number and attempts to become the leader. Server A will win the election because BLE doesn’t require it to have an up-to-date log to become a leader. Moreover, servers B, E, and D do not need to be connected to a majority to vote for it. Server A is elected and then syncs with its followers to become up-to-date before serving new requests.
+In this scenario, all the follower servers become disconnected from the leader. Since A is the only QC server, it will be the only one that increments its ballot number and attempt to become the leader. Server A will win the election because BLE doesn’t require it to have an up-to-date log to become a leader. Moreover, servers B, D, and E do not need to be connected to a majority to start following it. Thus, A overtakes leadership and synchronizes with its followers to become up-to-date before serving new requests. The synchronization occurs in the replication logic, completely separated from the BLE protocol.
 
 ### OmniPaxos in the Chained Scenario
 
 ![chained-omni](images/omni-chained.png)
 
-In the chained scenario, once again C detects the need for a new leader and, together with A’s vote, becomes the next leader. This time, however, the election of C is not gossiped to server B. This is because the heartbeats that A sends only include its own ballot number and not the ballot of its leader. Server B will not see that C has been elected and therefore not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
+In the chained scenario, C will once again think that B has failed, and since it is QC, it will increment its ballot number to try take over. Server A will start following C with the higher ballot. This time, however, the election of C is not gossiped to server B. This is because the heartbeats that A sends only include its own ballot number and  QC status, but not the ballot of its leader. Server B will not see that C has been elected and therefore not interrupt the stability of C’s leadership. Instead, servers A and C can continue to make progress as a quorum.
 
 ### Conclusion
 
-The quorum-connected heartbeats of OmniPaxos’ BLE protocol allow it to overcome partial connectivity scenarios where other protocols fail. These heartbeats allow servers to determine their leader without being quorum connected themselves. This enables OmniPaxos to fully leverage the power of leader-based consensus. That is, OmniPaxos requires only a single server to be connected to a majority to make progress, instead of the fully-connected majority required by other existing protocols.
+The heartbeats of OmniPaxos’ BLE protocol includes only the essential information for electing a leader, namely the quorum-connected status (QC) and the ballot number of a server. This enables capable QC servers to step up as the leader when required. Furthermore, as leader election is separated from replication, non-QC server can still participate in the replication to help QC servers form a quorum that commits entries. This enables OmniPaxos to fully leverage the power of leader-based consensus. That is, OmniPaxos requires only a single server to be connected to a majority to make progress, instead of the fully-connected majority required by other existing protocols.
