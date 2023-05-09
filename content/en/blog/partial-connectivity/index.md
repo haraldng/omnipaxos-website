@@ -83,3 +83,5 @@ In the chained scenario, C will once again think that B has failed, and since it
 ### Conclusion
 
 The heartbeats of OmniPaxos’ BLE protocol includes only the essential information for electing a leader, namely the quorum-connected status (QC) and the ballot number of a server. This enables capable QC servers to step up as the leader when required. Furthermore, since leader election is separated from replication, the non-candidate servers can still participate in the replication to help QC servers form a quorum that commits entries. This enables OmniPaxos to fully leverage the power of leader-based consensus. That is, OmniPaxos requires only a single server to be connected to a majority to make progress, instead of the fully-connected majority required by other existing protocols.
+
+*For more details on OmniPaxos, check out the [EuroSys'23 paper](https://dl.acm.org/doi/pdf/10.1145/3552326.3587441).*
