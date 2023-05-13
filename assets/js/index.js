@@ -64,7 +64,6 @@ Source:
 (function(){
 
   var index = new FlexSearch.Document({
-    tokenize: "forward",
     cache: 100,
     document: {
       id: 'id',
@@ -72,13 +71,14 @@ Source:
         "href", "title", "description"
       ],
       index: ["title", "description", "content"]
-    }
+    },
+    tokenize: "forward",
   });
 
 
   // Not yet supported: https://github.com/nextapps-de/flexsearch#complex-documents
 
-  /*
+
   var docs = [
     {{ range $index, $page := (where .Site.Pages "Section" "docs") -}}
       {
@@ -90,7 +90,7 @@ Source:
       },
     {{ end -}}
   ];
-  */
+
 
   // https://discourse.gohugo.io/t/range-length-or-last-element/3803/2
 
@@ -130,6 +130,8 @@ Source:
 
   function show_results(){
     const maxResult = 5;
+    // length of showed result description
+    const resultDesLen = 100;
     var searchQuery = this.value;
     var results = index.search(searchQuery, {limit: maxResult, enrich: true});
 
@@ -167,7 +169,7 @@ Source:
         a.appendChild(title);
 
         const description = document.createElement('span');
-        description.textContent = doc.description;
+        description.textContent = doc.description.substring(0, resultDesLen) + " ...";
         description.classList.add("suggestion__description");
         a.appendChild(description);
 
