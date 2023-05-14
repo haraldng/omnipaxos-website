@@ -75,12 +75,11 @@ Source:
     tokenize: "forward",
   });
 
-
   // Not yet supported: https://github.com/nextapps-de/flexsearch#complex-documents
 
 
   var docs = [
-    {{ range $index, $page := (where .Site.Pages "Section" "docs") -}}
+    {{ range $index, $page := (where .Site.AllPages "Section" "docs") -}}
       {
         id: {{ $index }},
         href: "{{ .Permalink }}",
@@ -99,13 +98,13 @@ Source:
   {{- if eq .Site.Params.options.searchSectionsIndex "ALL" }}
   {{- $list = .Site.Pages }}
   {{- else }}
-  {{- $list = (where .Site.Pages "Type" "in" .Site.Params.options.searchSectionsIndex) }}
+  {{- $list = (where .Site.AllPages "Type" "in" .Site.Params.options.searchSectionsIndex) }}
   {{- if (in .Site.Params.options.searchSectionsIndex "HomePage") }}
   {{ $list = $list | append .Site.Home }}
   {{- end }}
   {{- end }}
   {{- else }}
-  {{- $list = (where .Site.Pages "Section" "docs") }}
+  {{- $list = (where .Site.AllPages "Section" "docs") }}
   {{- end }}
 
   {{ $len := (len $list) -}}
@@ -131,7 +130,7 @@ Source:
   function show_results(){
     const maxResult = 5;
     // length of showed result description
-    const resultDesLen = 100;
+    const resultDesLen = 50;
     var searchQuery = this.value;
     var results = index.search(searchQuery, {limit: maxResult, enrich: true});
 
