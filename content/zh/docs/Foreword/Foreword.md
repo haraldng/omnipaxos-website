@@ -2,6 +2,7 @@
 title: "前序"
 weight: 2
 toc: false
+tags: ["omnipaxos", "rust"]
 ---
 OmniPaxos是一个基于Rust实现的分布式日志 (replicated log)库。OmniPaxos旨在隐藏共识的复杂性，为用户提供一个与本地日志一样简单易用的分布式日志。
 

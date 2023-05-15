@@ -32,6 +32,13 @@
 			</nav>
 			{{ end -}}
 			{{ .Content }}
+      {{ if .Params.tags -}}
+      <div class="mt-4">
+        {{ range $index, $tag := .Params.tags -}}
+        <p class="btn btn-light btn-link"  role="button">{{ . }}</p>
+        {{ end -}}
+      </div>
+      {{ end -}}
 			<div class="page-footer-meta d-flex flex-column flex-md-row justify-content-between">
 				{{ if .Site.Params.lastMod -}}
 					{{ partial "main/last-modified.html" . }}

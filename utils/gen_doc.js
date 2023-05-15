@@ -44,7 +44,7 @@ function generateFileStructure(fileStructure, basePath) {
       // Create file
       //noinspection JSUnfilteredForInLoop
       fs.writeFileSync(`${sectionPath}.md`, genIndexContent(key, DocIndex));
-      appendFileContent(`${OmniPaxosDocBasePath}/${section.path}`, `${sectionPath}.md`)
+      appendFileContent(`${OmniPaxosDocBasePath}/${section.path}`, `${sectionPath}.md`, section.tags)
       console.log(`File created: ${sectionPath}     with index ${DocIndex}`);
       DocIndex++;
     } else {
@@ -61,13 +61,16 @@ function generateFileStructure(fileStructure, basePath) {
   }
 }
 
-function genIndexContent(title, weight) {
-  return `---
-title: \"${title}\"
-weight: ${weight}
-toc: false
----
-`;
+function genIndexContent(title, weight, tags) {
+  let content = `---`;
+  content += `\ntitle: \"${title}\"`;
+  content += `\nweight: ${weight}`;
+  content += `\ntoc: false`;
+  if (tags){
+    content += `\ntags: ${JSON.stringify(tags)}`;
+  }
+  content += `\n---`;
+  return content;
 }
 
 function deleteDirectory(dirPath) {
