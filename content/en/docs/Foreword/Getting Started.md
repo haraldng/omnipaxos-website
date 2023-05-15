@@ -2,8 +2,7 @@
 title: "Getting Started"
 weight: 4
 toc: false
----
-## Cargo
+---## Cargo
 Add OmniPaxos to your cargo project as a dependency:
 
 ```toml

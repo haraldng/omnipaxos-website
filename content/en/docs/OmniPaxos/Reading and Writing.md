@@ -2,8 +2,7 @@
 title: "Reading and Writing"
 weight: 16
 toc: false
----
-We now show how to read and write the replicated log. The replicated log is *append-only*. To append an entry we call the following:
+---We now show how to read and write the replicated log. The replicated log is *append-only*. To append an entry we call the following:
 
 ```rust,edition2018,no_run,noplaypen
 let write_entry = KeyValue { key: String::from("a"), value: 123 };

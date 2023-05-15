@@ -2,8 +2,7 @@
 title: "Reconfiguration"
 weight: 22
 toc: false
----
-To change the nodes in the cluster, we must first stop the current Omni-Paxos instance. This is done via the `reconfigure()` function, which has a `ReconfigurationRequest` that contains the nodes for the next Omni-Paxos instance and some optional metadata.
+---To change the nodes in the cluster, we must first stop the current Omni-Paxos instance. This is done via the `reconfigure()` function, which has a `ReconfigurationRequest` that contains the nodes for the next Omni-Paxos instance and some optional metadata.
 
 ```rust,edition2018,no_run,noplaypen
 // Node 3 seems to have crashed... let's replace it with a new node 4.

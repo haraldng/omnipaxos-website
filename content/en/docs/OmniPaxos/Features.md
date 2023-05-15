@@ -2,8 +2,7 @@
 title: "Features"
 weight: 24
 toc: false
----
-OmniPaxos provide several features that can be used to enhance both usability and performance:
+---OmniPaxos provide several features that can be used to enhance both usability and performance:
 
 - `batch_accept`: Batch multiple log entries into a single message to reduce overhead during replication.
 - `continued_leader_reconfiguration` - When [reconfiguring](../reconfiguration.md), let the current leader become the initial leader in the new configuration (if possible). This can help shorten down-time during reconfiguration.

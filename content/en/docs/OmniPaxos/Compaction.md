@@ -2,8 +2,7 @@
 title: "Compaction"
 weight: 20
 toc: false
----
-As time passes, the replicated log in `OmniPaxos` will grow large. To avoid letting the log growing infinitely large, we support two ways of compaction that can be initiated by users:
+---As time passes, the replicated log in `OmniPaxos` will grow large. To avoid letting the log growing infinitely large, we support two ways of compaction that can be initiated by users:
 
 ## Trim
 Trimming the log removes all entries up to a certain index. Since the entries are deleted from the log, a trim operation can only be done if **ALL** nodes in the cluster have decided up to that index. Example:
