@@ -2,7 +2,8 @@
 title: "Communication"
 weight: 14
 toc: false
----As previously mentioned, the user has to send/receive messages between servers themselves. In this section, we show how the user should interact with `OmniPaxos` and its incoming and outgoing messages.
+---
+As previously mentioned, the user has to send/receive messages between servers themselves. In this section, we show how the user should interact with `OmniPaxos` and its incoming and outgoing messages.
 
 ## Incoming and Outgoing
 When a message is received from the network layer intended for our node, we need to handle it in `OmniPaxos`.

@@ -43,8 +43,8 @@ function generateFileStructure(fileStructure, basePath) {
       DocIndex++;
       // Create file
       //noinspection JSUnfilteredForInLoop
-      fs.writeFileSync(`${sectionPath}.md`, genIndexContent(key, DocIndex));
-      appendFileContent(`${OmniPaxosDocBasePath}/${section.path}`, `${sectionPath}.md`, section.tags)
+      fs.writeFileSync(`${sectionPath}.md`, genIndexContent(key, DocIndex, section.tags));
+      appendFileContent(`${OmniPaxosDocBasePath}/${section.path}`, `${sectionPath}.md`)
       console.log(`File created: ${sectionPath}     with index ${DocIndex}`);
       DocIndex++;
     } else {
@@ -69,7 +69,7 @@ function genIndexContent(title, weight, tags) {
   if (tags){
     content += `\ntags: ${JSON.stringify(tags)}`;
   }
-  content += `\n---`;
+  content += `\n---\n`;
   return content;
 }
 
