@@ -3,6 +3,7 @@ title: "Logging"
 weight: 26
 toc: false
 ---
+
 OmniPaxos uses the [slog](https://crates.io/crates/slog) crate to provide system-wide logging facilities. Logging works out of the box with a default asynchronous console and file logger implementation.
 
 The actual logging levels are controlled via build features. The default features correspond to `max_level_trace` and `release_max_level_info`, that is in debug builds all levels are shown, while in the release profile only `info` and more severe message are shown.
