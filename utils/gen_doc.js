@@ -16,6 +16,7 @@ console.log(JSON.stringify(jsonData, null, 2));
 genDocs(jsonData, EnDocPath)
 
 function genDocs(fileStructure, basePath) {
+  displayFileTree(OmniPaxosDocBasePath);
   deleteDirectory(basePath);
   fs.mkdirSync(basePath);
   const indexContent = `---
@@ -106,5 +107,25 @@ function appendFileContent(sourceFilePath, targetFilePath) {
         console.error(`Failed to append content to target file: ${err}`);
       }
     });
+  });
+}
+
+function displayFileTree(directoryPath, indent = '') {
+  const files = fs.readdirSync(directoryPath);
+
+  files.forEach((file, index) => {
+    const filePath = path.join(directoryPath, file);
+    const stats = fs.statSync(filePath);
+
+    if (stats.isDirectory()) {
+      console.log(indent + '|-- ' + file);
+      displayFileTree(filePath, indent + '   |');
+    } else {
+      console.log(indent + '|-- ' + file);
+    }
+
+    if (index === files.length - 1) {
+      console.log(indent.slice(0, -3) + '   ');
+    }
   });
 }
