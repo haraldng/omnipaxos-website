@@ -3,8 +3,8 @@ const yaml = require('js-yaml');
 const fs = require('fs'); // Required for reading the file
 const path = require('path');
 
-OmniPaxosDocBasePath = 'utils/omnidocs'
-EnDocPath = 'content/en/docs'
+OmniPaxosDocBasePath = 'omnidocs/docs'
+EnDocPath = '../content/en/docs'
 
 DocIndex = 0
 // Sample YAML data
