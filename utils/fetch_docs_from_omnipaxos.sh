@@ -32,6 +32,7 @@ if git diff --quiet; then
   echo "No changes in the working tree."
 else
   echo "Changes found in the working tree."
+  cd .. # move back to root directory
   git add . -v
   git commit -m "Doc updates"
   git push
