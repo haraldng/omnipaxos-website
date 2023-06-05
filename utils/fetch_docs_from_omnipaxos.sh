@@ -13,13 +13,12 @@ git clone https://github.com/haraldng/omnipaxos.git
 mv omnipaxos/docs/ omnidocs/
 # @temp
 #git checkout doc_sync_to_website
-rm -rf omnipaxos
 
 echo "ls -l"
 ls -l
 
-echo "ls -l omnidocs"
-ls -l omnidocs
+echo "ls -l omnidocs/docs [before]"
+ls -l omnidocs/docs
 
 ## gen docs
 npm install js-yaml fs
@@ -37,3 +36,9 @@ else
   git commit -m "Doc updates"
   git push
 fi
+
+echo "ls -l omnidocs/docs [after]"
+ls -l omnidocs/docs
+
+sleep 3
+rm -rf omnipaxos
