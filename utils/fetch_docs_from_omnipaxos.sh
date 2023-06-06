@@ -8,11 +8,14 @@ ls -l
 
 rm -rf omnidocs
 mkdir -p omnidocs
+
+sleep 3
 # Fetch from the OmniPaxos repository
 git clone https://github.com/haraldng/omnipaxos.git
 mv omnipaxos/docs/ omnidocs/
 # @temp
 #git checkout doc_sync_to_website
+rm -rf omnipaxos
 
 echo "ls -l"
 ls -l
@@ -39,6 +42,3 @@ fi
 
 echo "ls -l omnidocs/docs [after]"
 ls -l omnidocs/docs
-
-sleep 3
-rm -rf omnipaxos
