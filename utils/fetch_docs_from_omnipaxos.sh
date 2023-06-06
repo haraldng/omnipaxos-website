@@ -39,6 +39,3 @@ else
   git commit -m "Doc updates"
   git push
 fi
-
-echo "ls -l omnidocs/docs [after]"
-ls -l omnidocs/docs
