@@ -1,31 +1,22 @@
 #!/bin/bash
-# This sh file should be executed at the root/utils path
+# This sh file should be executed at the root path of this repo.
 
 # Pull docs of OmniPaxos
 # 'omnidocs/': temporarily stores docs of OmniPaxos
-echo "ls -l"
-ls -l
-
-rm -rf omnidocs
-mkdir -p omnidocs
-
-sleep 3
+rm -rf utils/omnidocs
 # Fetch from the OmniPaxos repository
 git clone https://github.com/haraldng/omnipaxos.git
-mv omnipaxos/docs/ omnidocs/
+sleep 1
+cd omnipaxos
 # @temp
 #git checkout doc_sync_to_website
+mv docs/ ../utils/omnidocs/
+cd ..
 rm -rf omnipaxos
 
-echo "ls -l"
-ls -l
-
-echo "ls -l omnidocs/docs [before]"
-ls -l omnidocs/docs
-
-## gen docs
+# gen docs
 npm install js-yaml fs
-node gen_doc.js
+node utils/gen_doc.js
 
 git config user.name "TimXLHan"
 git config user.email "tim.han.0000@gmail.com"
@@ -34,7 +25,6 @@ if git diff --quiet; then
   echo "No changes in the working tree."
 else
   echo "Changes found in the working tree."
-  cd .. # move back to root directory
   git add . -v
   git commit -m "Doc updates"
   git push
