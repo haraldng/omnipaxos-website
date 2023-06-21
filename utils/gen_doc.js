@@ -1,10 +1,11 @@
+/* eslint-disable */
 // Require the js-yaml library
 const yaml = require('js-yaml');
 const fs = require('fs'); // Required for reading the file
 const path = require('path');
 
-OmniPaxosDocBasePath = 'omnidocs/docs'
-EnDocPath = '../content/en/docs'
+OmniPaxosDocBasePath = 'utils/omnidocs'
+EnDocPath = 'content/en/docs'
 
 DocIndex = 0
 // Sample YAML data
@@ -98,13 +99,14 @@ function appendFileContent(sourceFilePath, targetFilePath) {
   fs.readFile(sourceFilePath, 'utf-8', (err, data) => {
     if (err) {
       console.error(`Failed to read source file: ${err}`);
-      return;
+      throw err;
     }
 
     // Append the content of the source file to the target file
     fs.appendFile(targetFilePath, data, 'utf-8', (err) => {
       if (err) {
         console.error(`Failed to append content to target file: ${err}`);
+        throw err;
       }
     });
   });
