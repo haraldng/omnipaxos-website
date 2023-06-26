@@ -152,3 +152,5 @@ The ``snapshot()`` function takes two parameters: an optional `compact_idx` that
 We have successfully turned our single-point-of-failure RocksDB service into a highly available service with multiple replicas! By using OmniPaxos as a changelog, we managed to build a consensus-replicated system without having to deal with the complexities of consensus.
 
 In general, users only need to implement the messaging between servers and how a server should read/write from the replicated log to transform their system into a replicated and fault-tolerant system with OmniPaxos. :rocket:
+
+*Have questions related to this post or how to use OmniPaxos? Join our [discussions](https://github.com/haraldng/omnipaxos/discussions)!*
