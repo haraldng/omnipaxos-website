@@ -1,5 +1,5 @@
 ---
-title: "Building distributed RocksDB with OmniPaxos in X minutes"
+title: "Building a distributed RocksDB with OmniPaxos in 8 minutes"
 description: ""
 excerpt: "TODO"
 date: 2023-05-08T20:30:54+02:00
@@ -14,13 +14,13 @@ pinned: false
 homepage: false
 ---
 
-In this post, we will demonstrate how to use OmniPaxos to build a simple distributed database. As seen in the Figure below, we will go from a single server database service to a distributed setup with multiple servers replicating the database. OmniPaxos will act as the replicated changelog for the distributed database that provides a single execution order for all replicas so that they remain consistent.
+In this post, we will demonstrate how to use OmniPaxos to build a simple distributed database. As seen in the Figure below, we will go from a single server database service to a distributed setup with multiple servers replicating the database. OmniPaxos will act as the **replicated changelog** for the distributed database that provides a single execution order for all replicas, so they remain consistent.
 
 ![overview](images/overview.png)
 
-Currently, the client and server are executed in separate docker containers and communicate using [TCP sockets](https://doc.rust-lang.org/std/net/index.html). The client sends a ``KVCommand`` (Put, Get, Delete) to the server which applies the change to its RocksDB instance and replies the client.
+Currently, the client and server are executed in separate docker containers and communicate over [TCP sockets](https://doc.rust-lang.org/std/net/index.html). The client sends a ``KVCommand`` (Put, Get, Delete) to the server which applies the change to its RocksDB instance and replies the client.
 
-In the replicated version, the server handling the request will instead first append the `KVCommand` to the `OmniPaxos` log. All servers will continuously read from the log and apply each committed entry to their database.
+In the distributed version, servers cannot directly apply a ``KVCommand`` to its database, because if servers get clients requests and apply them in different order, the database will become inconsistent across the servers. Instead, a `KVCommand` must first be appended to the `OmniPaxos` log, which will order all requests into a single log and replicate it on all servers. All servers will then continuously read from the `OmniPaxos` log and apply the changes in the same order to remain consistent.
 
 There are three main things to implement:
 - [OmniPaxos as the database changelog](#omnipaxos-changelog): How to construct and interact with the ``OmniPaxos`` log containing `KVCommand` entries.
@@ -42,7 +42,7 @@ $ tree
     ├── network.rs    # network implementation using TCP sockets
     └── server.rs     # server handling client requests and updating database
 ```
-We will only focus on the code modifications related to OmniPaxos, which will be on those files. If you are interested in more details, the full source code can be found [TODO]().
+We will only focus on the code modifications related to OmniPaxos, which will be on those files. If you are interested in more details, the full source code can be found [here](https://github.com/haraldng/omnipaxos-rocksdb-tutorial).
 
 ## The OmniPaxos Changelog :clipboard: <a name="omnipaxos-changelog"></a>
 We start by adding the required OmniPaxos dependencies to our ``Cargo.toml`` file.
@@ -75,10 +75,12 @@ Since the database will be replicated, the servers cannot directly apply changes
 
 Thus, when a client tries to modify the database with a `KVCommand::{Put, Delete}` request, the server will first try to `append` it to the `OmniPaxos` log.
 
+![server-header](images/server-header.png)
 ![server-append](images/server-append.png)
 
 A server should continuously look for newly committed entries by checking if the ``decided_idx`` in OmniPaxos has advanced. If so, it will read those entries and apply each of them to its database (line 63--64).
 
+![server-header](images/server-header.png)
 ![server-handle-update](images/server-handle-update.png)
 
 ## Messaging :mailbox_with_mail: <a name="messaging"></a>
@@ -115,7 +117,7 @@ The `ClusterConfig` has a field `nodes` which should be set to a vector with all
 
 We can now take our OmniPaxos-powered system for a spin! :dancer:
 
-**Demo** [[**watch**](TODO) or [**try yourself**](TODO)]: We kill one of the servers and are still able to access and modify that the database. Furthermore, we also simulate concurrent modifications to show that OmniPaxos provides a single consistent log order at all servers.
+**Demo** [[**watch**](https://youtu.be/4VqB0-KOsms?t=809) or [**try yourself**](https://github.com/haraldng/omnipaxos-rocksdb-tutorial/tree/omnipaxos-replicated#demo-1-fault-tolerance)]: We kill one of the servers and are still able to access and modify that the database. Furthermore, we also simulate concurrent modifications to show that OmniPaxos provides a single consistent log order at all servers.
 
 ## Snapshots :camera: <a name="snapshots"></a>
 At this point, we have a simple replicated service where the servers remain consistent by applying changes to the database according to the ``OmniPaxos`` log order. However, over time the log will grow infinitely large. To address this, we will use the *Snapshot* feature in OmniPaxos. We can think of snapshotting as squashing multiple entries into a single entry in the `OmniPaxos` log. An example using `KVCommand` can be seen below.
@@ -142,7 +144,7 @@ At this point, we have implemented *how* to create a snapshot, but not *when* to
 
 The ``snapshot()`` function takes two parameters: an optional `compact_idx` that specifies the log index where a snapshot should be created at. If it is `None` then the highest possible log index will be used, which is the `decided_idx`. The second parameter is the `local_only` flag, which determines if only this server or all servers should perform the snapshot. Here, we set the snapshots to be local-only since all servers will try to snapshot once they see 5 new decided entries.
 
-**Demo** [[**watch**](TODO) or [**try yourself**](TODO)]: We attach to one of the server containers and for every 5th successful request, it outputs how the log is snapshotted.
+**Demo** [[**watch**](https://youtu.be/4VqB0-KOsms?t=1389) or [**try yourself**](https://github.com/haraldng/omnipaxos-rocksdb-tutorial/tree/omnipaxos-snapshot#demo-2-snapshot)]: We attach to one of the server containers and for every 5th successful request, it outputs how the log is snapshotted.
 
 ## Summary
 We have now successfully turned our single-point-of-failure RocksDB service into a highly available service with multiple replicas! By using OmniPaxos as a changelog, we managed to build a consensus-replicated system without having to deal with the complexities of consensus.
