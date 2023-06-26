@@ -2,8 +2,8 @@
 title: "Building distributed RocksDB with OmniPaxos in 8 minutes"
 description: ""
 excerpt: "In this 8-minute blog post, we show how to transform a simple single-server RocksDB service into a distributed version with multiple servers replicating the same RocksDB state. We use OmniPaxos as a replicated changelog that all servers execute according to guarantee consistency. We also show how to prevent the log from growing infinitely by using the snapshot feature in OmniPaxos."
-date: 2023-05-08T20:30:54+02:00
-lastmod: 2023-05-08T20:30:54+02:00
+date: 2023-06-26T20:30:54+02:00
+lastmod: 2023-06-26T20:30:54+02:00
 draft: false
 weight: 50
 images: []
