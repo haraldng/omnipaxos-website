@@ -7,6 +7,10 @@ const path = require('path');
 OmniPaxosDocBasePath = 'utils/omnidocs'
 EnDocPath = 'content/en/docs'
 
+// Print the current working directory
+const currentDirectory = process.cwd();
+console.log("Current working directory: " + currentDirectory);
+
 DocIndex = 0
 // Sample YAML data
 const yamlData = fs.readFileSync(`${OmniPaxosDocBasePath}/structure.yml`, 'utf8');
