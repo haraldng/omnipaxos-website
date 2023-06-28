@@ -1,6 +1,6 @@
 #!/bin/bash
 # This sh file should be executed at the root path of this repo.
-
+set -e
 # Pull docs of OmniPaxos
 # 'omnidocs/': temporarily stores docs of OmniPaxos
 rm -rf utils/omnidocs
