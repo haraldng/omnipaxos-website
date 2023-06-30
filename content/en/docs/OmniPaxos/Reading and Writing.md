@@ -7,7 +7,6 @@ We now show how to read and write the replicated log. The replicated log is *app
 
 ```rust
 let write_entry = KeyValue { key: String::from("a"), value: 123 };
-
 omni_paxos.append(write_entry).expect("Failed to append");
 ```
 
