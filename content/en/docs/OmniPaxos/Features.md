@@ -1,6 +1,6 @@
 ---
 title: "Features"
-weight: 26
+weight: 28
 toc: false
 ---
 OmniPaxos provide several features that can be used to enhance both usability and performance:

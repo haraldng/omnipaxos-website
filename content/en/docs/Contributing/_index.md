@@ -1,5 +1,5 @@
 ---
 title: "Contributing"
-weight: 31
+weight: 35
 toc: false
 ---
