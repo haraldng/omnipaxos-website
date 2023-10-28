@@ -5,10 +5,8 @@ toc: false
 ---
 UniCache is a feature that can reduce the amount of data sent between servers if the data is skewed and certain values reoccur often. **UniCache acts as a dictionary that maps popular data to smaller encodings**. Users annotate fields in the `Entry` that are cachable, and when such a value is encountered, it gets transmitted as an encoding instead. In this way, OmniPaxos can reduce the network I/O in skewed workloads by encoding frequently repeated data as smaller types.
 
-![unicache](../images/unicache-example.png)
-
 ## Example
-As an example, consider an online store that stores its customers in a distributed database replicated by OmniPaxos. 
+As an example, consider an online store that stores its customers in a distributed database replicated by OmniPaxos.
 ```rust
 use omnipaxos::macros::Entry;
 
@@ -44,7 +42,7 @@ struct Customer {
     #[unicache(encoding(u16), cache(lru))]
     profession: String,
 }
-``` 
+```
 Note that instead of deriving `Entry` for the struct `Customer`, we are now deriving `UniCacheEntry`. The `first_name` is annotated with
 `#[unicache(encoding(u8)]` which implies that if there is a cache hit, the value will be sent as a `u8` instead of the original type (`String`). Other attributes are the `size` and `cache`. The `size` lets users define the cache size for the field. The `cache` lets us set the eviction policy to `lfu` (least-frequently-used) or `lru` (least-recently-used).
 
@@ -97,5 +95,5 @@ match read_second_customer {
 }
 ```
 > **Note:** The cached values only get encoded in the messages being sent in OmniPaxos. UniCache can therefore only compress the messages but not the storage.
- 
+
 For more details on the design and benefits of UniCache, check out our [paper](https://openproceedings.org/2023/conf/edbt/3-paper-117.pdf) from EDBT2023.
