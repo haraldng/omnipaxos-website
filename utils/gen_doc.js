@@ -98,6 +98,28 @@ function deleteDirectory(dirPath) {
   }
 }
 
+// Function to fix image paths in the document content
+function fixImagePaths(docContent) {
+  // Define the base GitHub URL
+  var githubBaseUrl = "https://raw.githubusercontent.com/TimXLHan/omnipaxos-website-assets/main/assets/images/";
+  // Define the regular expression pattern to match image tags with or without a relative path
+  var pattern = /!\[(.*?)\]\((.*?)\)/g;
+
+  // Define a function to replace image URLs while preserving file names
+  function replaceImageUrls(match, altText, imagePath) {
+    // Extract the file name from the image path
+    var fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+
+    // Create the new image URL with the base GitHub URL
+    var newImageUrl = githubBaseUrl + fileName;
+
+    // Return the updated image tag
+    return `![${altText}](${newImageUrl})`;
+  }
+
+  return docContent.replace(pattern, replaceImageUrls);
+}
+
 function appendFileContent(sourceFilePath, targetFilePath) {
   // Read the content of the source file
   fs.readFile(sourceFilePath, 'utf-8', (err, data) => {
@@ -105,6 +127,9 @@ function appendFileContent(sourceFilePath, targetFilePath) {
       console.error(`Failed to read source file: ${err}`);
       throw err;
     }
+
+    // Fix image paths
+    data = fixImagePaths(data);
 
     // Append the content of the source file to the target file
     fs.appendFile(targetFilePath, data, 'utf-8', (err) => {
