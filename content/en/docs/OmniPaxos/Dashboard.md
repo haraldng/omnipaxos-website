@@ -30,4 +30,4 @@ omni_paxos_ui.tick(omni_paxos.get_ui_states());
 
 The dashboard has different views depending on if it is connected to the leader or follower server. The leader's dashboard has more information than the follower's, such as the follower's lag in the replication log, as shown below:
 
-![omnipaxos](../images/dashboard.jpg)
+![omnipaxos](https://raw.githubusercontent.com/TimXLHan/omnipaxos-website-assets/main/assets/images/dashboard.jpg)

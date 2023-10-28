@@ -18,14 +18,14 @@ rm -rf omnipaxos
 npm install js-yaml fs
 node utils/gen_doc.js
 
-git config user.name "TimXLHan"
-git config user.email "tim.han.0000@gmail.com"
-# push changes
-if git diff --quiet; then
-  echo "No changes in the working tree."
-else
-  echo "Changes found in the working tree."
-  git add . -v
-  git commit -m "Doc updates"
-  git push
-fi
+#git config user.name "TimXLHan"
+#git config user.email "tim.han.0000@gmail.com"
+## push changes
+#if git diff --quiet; then
+#  echo "No changes in the working tree."
+#else
+#  echo "Changes found in the working tree."
+#  git add . -v
+#  git commit -m "Doc updates"
+#  git push
+#fi
