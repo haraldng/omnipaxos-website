@@ -14,13 +14,13 @@ mv docs/ ../utils/omnidocs/
 cd ..
 rm -rf omnipaxos
 
-# gen docs
+## gen docs
 npm install js-yaml fs
 node utils/gen_doc.js
 
 git config user.name "TimXLHan"
 git config user.email "tim.han.0000@gmail.com"
-# push changes
+## push changes
 if git diff --quiet; then
   echo "No changes in the working tree."
 else

@@ -18,6 +18,7 @@ const yamlData = fs.readFileSync(`${OmniPaxosDocBasePath}/structure.yml`, 'utf8'
 const jsonData = yaml.load(yamlData);
 console.log(JSON.stringify(jsonData, null, 2));
 
+// Entry point
 genDocs(jsonData, EnDocPath)
 
 function genDocs(fileStructure, basePath) {
@@ -36,6 +37,7 @@ images: []
 `;
   fs.writeFileSync(`${basePath}/_index.md`, indexContent);
   generateFileStructure(jsonData, basePath);
+  moveFiles(`${OmniPaxosDocBasePath}/images`, `static/images`);
   deleteDirectory(OmniPaxosDocBasePath);
 }
 
@@ -98,6 +100,28 @@ function deleteDirectory(dirPath) {
   }
 }
 
+// Function to fix image paths in the document content
+function fixImagePaths(docContent) {
+  // Define the base GitHub URL
+  var githubBaseUrl = "images/";
+  // Define the regular expression pattern to match image tags with or without a relative path
+  var pattern = /!\[(.*?)\]\((.*?)\)/g;
+
+  // Define a function to replace image URLs while preserving file names
+  function replaceImageUrls(match, altText, imagePath) {
+    // Extract the file name from the image path
+    var fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+
+    // Create the new image URL with the base GitHub URL
+    var newImageUrl = githubBaseUrl + fileName;
+
+    // Return the updated image tag
+    return `![${altText}](${newImageUrl})`;
+  }
+
+  return docContent.replace(pattern, replaceImageUrls);
+}
+
 function appendFileContent(sourceFilePath, targetFilePath) {
   // Read the content of the source file
   fs.readFile(sourceFilePath, 'utf-8', (err, data) => {
@@ -105,6 +129,9 @@ function appendFileContent(sourceFilePath, targetFilePath) {
       console.error(`Failed to read source file: ${err}`);
       throw err;
     }
+
+    // Fix image paths
+    data = fixImagePaths(data);
 
     // Append the content of the source file to the target file
     fs.appendFile(targetFilePath, data, 'utf-8', (err) => {
@@ -134,4 +161,31 @@ function displayFileTree(directoryPath, indent = '') {
       console.log(indent.slice(0, -3) + '   ');
     }
   });
+}
+
+// Move files from one directory to another, if name conflicts occur, overwrite the existing file
+function moveFiles(sourceDir, targetDir) {
+  try {
+    // Get a list of all files in the source directory
+    const files = fs.readdirSync(sourceDir);
+    // Loop through each file and move it to the target directory
+    files.forEach((file) => {
+      const sourceFilePath = path.join(sourceDir, file);
+      const targetFilePath = path.join(targetDir, file);
+      try {
+        // Check if the file already exists in the target directory
+        if (fs.existsSync(targetFilePath)) {
+          // If it does, remove the existing file before moving
+          fs.unlinkSync(targetFilePath);
+        }
+        // Move the file to the target directory
+        fs.renameSync(sourceFilePath, targetFilePath);
+        console.log(`Moved ${file} to ${targetDir}`);
+      } catch (error) {
+        console.error(`Error moving ${file}: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    console.error(`Error reading source directory: ${error.message}`);
+  }
 }
