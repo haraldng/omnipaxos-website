@@ -5,7 +5,7 @@ toc: false
 ---
 UniCache is a feature that can reduce the amount of data sent between servers if the data is skewed and certain values reoccur often. **UniCache acts as a dictionary that maps popular data to smaller encodings**. Users annotate fields in the `Entry` that are cachable, and when such a value is encountered, it gets transmitted as an encoding instead. In this way, OmniPaxos can reduce the network I/O in skewed workloads by encoding frequently repeated data as smaller types.
 
-![unicache](https://raw.githubusercontent.com/TimXLHan/omnipaxos-website-assets/main/assets/images/unicache-example.png)
+![unicache](images/unicache-example.png)
 
 ## Example
 As an example, consider an online store that stores its customers in a distributed database replicated by OmniPaxos. 

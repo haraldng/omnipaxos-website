@@ -103,7 +103,7 @@ function deleteDirectory(dirPath) {
 // Function to fix image paths in the document content
 function fixImagePaths(docContent) {
   // Define the base GitHub URL
-  var githubBaseUrl = "https://raw.githubusercontent.com/TimXLHan/omnipaxos-website-assets/main/assets/images/";
+  var githubBaseUrl = "images/";
   // Define the regular expression pattern to match image tags with or without a relative path
   var pattern = /!\[(.*?)\]\((.*?)\)/g;
 
