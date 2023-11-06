@@ -1,6 +1,6 @@
 ---
 title: "Contributing to OmniPaxos"
-weight: 36
+weight: 40
 toc: false
 ---
 Thanks for showing interest in improving OmniPaxos! All contributions (small or big) are welcomed and highly appreciated.

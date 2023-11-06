@@ -1,5 +1,5 @@
 ---
-title: "UniCache - Data-driven Replication"
+title: "UniCache"
 weight: 26
 toc: false
 ---
