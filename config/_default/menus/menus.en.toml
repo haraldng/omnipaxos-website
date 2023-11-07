@@ -55,6 +55,12 @@
   url = "/resources/"
 #  parent = "get-started"
 
+[[main]]
+name = "Playground"
+weight = 60
+identifier = "playground"
+url = "/docs/playground/playground/"
+
 #[[main]]
 #  name = "Tutorial"
 #  weight = 50
